@@ -1,51 +1,44 @@
 package retrieveSecret
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
-	"time"
+
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 )
 
 type Payload struct {
-	data string
+	Data string `json:"data"`
 }
 
 type Secret struct {
-    name string
-	payload Payload
+    Name string `json:"name"`
+	Payload Payload `json:"payload"`
 }
 
-func RetrieveSecret(projectId string, secretName string, accessToken string) Secret {
-	// Create a new context
-	captchaContext := context.Background()
-	// With a deadline of 10 seconds
-	captchaContext, _ = context.WithTimeout(captchaContext, 10*time.Second)
+func RetrieveSecret(projectId string, secretName string) (*Secret, error) {
+	
+	httpClient, err := google.DefaultClient(oauth2.NoContext)
+
+	if err != nil {
+		return nil, fmt.Errorf("Error: could not create DefaultClient (%s)", err)
+	}
 
 	// Make a request, that will call the google homepage
 	url := fmt.Sprintf("https://secretmanager.googleapis.com/v1beta1/projects/%s/secrets/%s/versions/latest:access", projectId, secretName)
 	req, _ := http.NewRequest("GET", url, nil)
 
-	// Associate the cancellable context we just created to the request
-	req = req.WithContext(captchaContext)
+	// // Add HTTP Headers
+	req.Header.Add("X-Goog-User-Project", projectId)
 
-	// Add HTTP Headers
-	authorization := fmt.Sprintf("Bearer %s", accessToken)
-	req.Header.Add("Authorization", authorization)
-	req.Header.Add("X-Goog-User-Project" projectId)
-
-	// Create a new HTTP client and execute the request
-	httpClient := &http.Client{}	
-	
 	// Execute the request
 	res, err := httpClient.Do(req)
 
 	// If the request failed, log the error
 	if err != nil {
-		log.Fatalln(err)		
-		return
+		return nil, fmt.Errorf("Error: could not retrieve secret %s (%s)", secretName, err)
 	}
 	
 	// The client must close the response when done	
@@ -55,9 +48,8 @@ func RetrieveSecret(projectId string, secretName string, accessToken string) Sec
 	var secret Secret
 	decodeError := json.NewDecoder(res.Body).Decode(&secret)
 	if decodeError != nil {
-		log.Fatalln(decodeError)	
-		return	
+		return nil, fmt.Errorf("Error: could not decode secret %s (%s)", secretName, decodeError)
 	}
 
-	return secret
+	return &secret, nil
 }
