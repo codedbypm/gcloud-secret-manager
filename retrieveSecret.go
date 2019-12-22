@@ -1,4 +1,4 @@
-package retrieveSecret
+package googleCloudSecretManager
 
 import (
 	"encoding/json"
@@ -14,12 +14,12 @@ type Payload struct {
 }
 
 type Secret struct {
-    Name string `json:"name"`
+	Name    string  `json:"name"`
 	Payload Payload `json:"payload"`
 }
 
 func RetrieveSecret(projectId string, secretName string) (*Secret, error) {
-	
+
 	httpClient, err := google.DefaultClient(oauth2.NoContext)
 
 	if err != nil {
@@ -40,8 +40,8 @@ func RetrieveSecret(projectId string, secretName string) (*Secret, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error: could not retrieve secret %s (%s)", secretName, err)
 	}
-	
-	// The client must close the response when done	
+
+	// The client must close the response when done
 	defer res.Body.Close()
 
 	// Decode the JSON
