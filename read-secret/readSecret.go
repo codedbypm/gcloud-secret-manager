@@ -1,4 +1,4 @@
-package googleCloudSecretManager
+package read-secret
 
 import (
 	"encoding/json"
