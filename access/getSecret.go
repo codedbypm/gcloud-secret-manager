@@ -1,4 +1,4 @@
-package secretaccess
+package access
 
 import (
 	"encoding/json"
