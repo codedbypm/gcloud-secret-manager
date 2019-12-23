@@ -11,7 +11,7 @@ import (
 
 // Payload is a struct containing raw data
 type Payload struct {
-	Data string `json:"data"`
+	Data []byte `json:"data"`
 }
 
 // Secret models any sensitive data stored in SecretManager
