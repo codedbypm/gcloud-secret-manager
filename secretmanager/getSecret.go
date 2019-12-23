@@ -20,8 +20,8 @@ type Secret struct {
 	Payload Payload `json:"payload"`
 }
 
-// GetSecret retrieves a given secret from the specified Google Cloud project
-func GetSecret(secretName string, projectID string) (*Secret, error) {
+// getSecret retrieves a given secret from the specified Google Cloud project
+func getSecret(secretName string, projectID string) (*Secret, error) {
 
 	httpClient, err := google.DefaultClient(oauth2.NoContext)
 
