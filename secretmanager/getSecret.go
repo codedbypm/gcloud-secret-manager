@@ -1,4 +1,4 @@
-package access
+package secretmanager
 
 import (
 	"encoding/json"
@@ -21,7 +21,7 @@ type Secret struct {
 }
 
 // GetSecret retrieves a given secret from the specified Google Cloud project
-func GetSecret(projectID string, secretName string) (*Secret, error) {
+func GetSecret(secretName string, projectID string) (*Secret, error) {
 
 	httpClient, err := google.DefaultClient(oauth2.NoContext)
 
