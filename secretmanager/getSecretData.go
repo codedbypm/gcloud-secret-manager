@@ -9,7 +9,7 @@ import (
 	sm "cloud.google.com/go/secretmanager/apiv1beta1"
 )
 
-func getSecretData(secretName string, projectID string) ([]byte, error) {
+func GetSecretData(secretName string, projectID string) ([]byte, error) {
 
 	ctx := context.Background()
 	smClient, err := sm.NewClient(ctx)

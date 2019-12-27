@@ -8,10 +8,9 @@ import (
 
 func main() {
 	// Read secret
-	secret, err := secretmanager.GetSecretData(
-		"agora-secret-mongo-user",
+	secretData, err := secretmanager.GetSecretData(
+		"agora-secret-mongo-pass",
 		"agora-polis",
-		"agora-crypto-key",
 	)
 
 	if err != nil {
@@ -19,6 +18,5 @@ func main() {
 		return
 	}
 
-	log.Print(secret)
-
+	log.Print(string(secretData))
 }
